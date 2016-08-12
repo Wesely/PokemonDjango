@@ -87,7 +87,7 @@ class Renamer3(object):
         print "Start renamer"
 
         self.init_config()
-        json_data = open(os.path.join(BASE, 'pokemon.en.json'))
+        json_data = open(os.path.join(BASE, 'pokemon.tw.json'))
         print json_data  
         self.pokemon_list = json.load(json_data)
         #except IOError:
