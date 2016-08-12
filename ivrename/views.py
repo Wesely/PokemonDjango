@@ -26,11 +26,31 @@ def jsonResponse(dict):
 @require_POST
 def get_iv(request):
     global a, u, p , lo, clear
-    a = request.POST.get('a')
-    u = request.POST.get('u')
-    p = request.POST.get('p')
-    lo = request.POST.get('list_only')
-    clear = request.POST.get('clear')
+    format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False)'
+    if request.POST.get('a'):
+        a = request.POST.get('a')
+    else:
+        return jsonResponse({'msg':format_msg,  'success':False})
+
+    if request.POST.get('u'):
+        u = request.POST.get('u')
+    else:
+        return jsonResponse({'msg':format_msg,  'success':False})
+
+    if request.POST.get('p'):
+        p = request.POST.get('p')
+    else:
+        return jsonResponse({'msg':format_msg,  'success':False})
+
+    if request.POST.get('list_only'):
+        lo = request.POST.get('list_only')
+    else:
+        lo = True
+
+    if request.POST.get('clear'):
+        clear = request.POST.get('clear')
+    else:
+        clear = False
     #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
     renamer = Renamer3()
     table_data = renamer.start()
