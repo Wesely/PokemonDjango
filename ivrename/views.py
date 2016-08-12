@@ -54,7 +54,7 @@ def get_iv(request):
     #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
     renamer = Renamer3()
     table_data = renamer.start()
-    return jsonResponse({'table_data':table_data,  'success':True})
+    return jsonResponse({'usage':format_msg, 'table_data':table_data,  'success':True})
 
 class Colors:
     OKGREEN = '\033[92m'
