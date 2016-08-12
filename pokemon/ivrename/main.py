@@ -1,163 +1,83 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from django.shortcuts import render
-import json
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from subprocess import call
+"""This module renames Pokemon according to user configuration"""
 
+import json
 import time
 import argparse
 from itertools import groupby
 from pgoapi import PGoApi
 from random import randint
 from terminaltables import AsciiTable
-import os.path
-BASE = os.path.dirname(os.path.abspath(__file__))
-
-
-def jsonResponse(dict):
-    """ return json response """
-    return HttpResponse(json.dumps(dict), content_type='application/json; charset="utf-8"')
-
-@csrf_exempt
-@require_POST
-def get_iv(request):
-    global a, u, p , lo, clear, fast
-    format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False), fast=還沒做好:快速重新命名(預設False)'
-    if request.POST.get('a'):
-        a = request.POST.get('a')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('u'):
-        u = request.POST.get('u')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('p'):
-        p = request.POST.get('p')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('list_only'):
-        lo = request.POST.get('list_only')
-    else:
-        lo = True
-
-    if request.POST.get('clear'):
-        clear = request.POST.get('clear')
-    else:
-        clear = False
-
-
-    if request.POST.get('fast'):
-        fast = request.POST.get('fast')
-    else:
-        fast = False
-    #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
-    renamer = Renamer3()
-    table_data = renamer.start()
-    return jsonResponse({'usage':format_msg, 'table_data':table_data,  'success':True})
 
 class Colors:
     OKGREEN = '\033[92m'
     ENDC = '\033[0m'
 
-class Renamer3(object):
+class Renamer(object):
     """Main renamer class object"""
 
     def __init__(self):
         self.pokemon = []
         self.api = None
+        self.config = None
         self.pokemon_list = None
 
-
     def init_config(self):
-
-        self.auth_service = a
-        self.username = u
-        self.password = p
-        self.clear = clear
-        self.list_only = lo
-        self.format = "%percent% %name"
-        self.overwrite = None
-        self.min_delay = 10
-        self.max_delay = 20
-        self.iv = 0
-        self.locale = "en"
-        self.data = None
         """Gets configuration from command line arguments"""
-        # parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser()
 
-        # parser.add_argument("-a", "--auth_service")
-        # parser.add_argument("-u", "--username")
-        # parser.add_argument("-p", "--password")
-        # parser.add_argument("--clear", action='store_true', default=False)
-        # parser.add_argument("-lo", "--list_only", action='store_true', default=False)
-        # parser.add_argument("--format", default="%ivsum, %atk/%def/%sta")
-        # parser.add_argument("-l", "--locale", default="en")
-        # parser.add_argument("--min_delay", type=int, default=10)
-        # parser.add_argument("--max_delay", type=int, default=20)
-        # parser.add_argument("--iv", type=int, default=0)
+        parser.add_argument("-a", "--auth_service")
+        parser.add_argument("-u", "--username")
+        parser.add_argument("-p", "--password")
+        parser.add_argument("--clear", action='store_true', default=False)
+        parser.add_argument("-lo", "--list_only", action='store_true', default=False)
+        parser.add_argument("--format", default="%ivsum, %atk/%def/%sta")
+        parser.add_argument("-l", "--locale", default="en")
+        parser.add_argument("--min_delay", type=int, default=10)
+        parser.add_argument("--max_delay", type=int, default=20)
+        parser.add_argument("--iv", type=int, default=0)
 
-        # self.config = parser.parse_args()
-        # self.overwrite = True
-        #self.skip_favorite = True
-        #self.only_favorite = False
+        self.config = parser.parse_args()
+        self.config.overwrite = True
+        #self.config.skip_favorite = True
+        #self.config.only_favorite = False
 
     def start(self):
         """Start renamer"""
         print "Start renamer"
 
         self.init_config()
-        json_data = open(os.path.join(BASE, 'pokemon.tw.json'))
-        print json_data  
-        self.pokemon_list = json.load(json_data)
-        #except IOError:
-        #print "~the selected language is currently not supported"
-        #exit(0)
+        print self.config
+        try:
+            self.pokemon_list = json.load(open('locales/pokemon.' + self.config.locale + '.json'))
+        except IOError:
+            print "The selected language is currently not supported"
+            exit(0)
 
         self.setup_api()
         self.get_pokemon()
-        data = self.print_pokemon()
-        print 'lo:'+lo+',  clear:'+clear
-	if lo=='true' or lo=='True':
-            print 'to pass, do nothing'
+        self.print_pokemon()
+
+        if self.config.list_only:
             pass
-        elif clear=='true' or clear=='True':
-            print 'to clear'
+        elif self.config.clear:
             self.clear_pokemon()
         else:
-            print 'to rename'
             self.rename_pokemon()
-        return self.data
 
     def setup_api(self):
         """Prepare and sign in to API"""
         self.api = PGoApi()
 
-        if not self.api.login(self.auth_service,
-                              str(self.username),
-                              str(self.password)):
+        if not self.api.login(self.config.auth_service,
+                              str(self.config.username),
+                              str(self.config.password)):
             print "Login error"
             exit(0)
 
         print "Signed in"
-
-    def get_pokemon(self):
-        """Fetch Pokemon from server and store in array"""
-        print "Getting Pokemon list"
-        self.api.get_inventory()
-        response_dict = self.api.call()
-
-        self.pokemon = []
-        inventory_items = response_dict['responses'] \
-                                       ['GET_INVENTORY'] \
-                                       ['inventory_delta'] \
-                                       ['inventory_items']
 
     def get_pokemon(self):
         """Fetch Pokemon from server and store in array"""
@@ -231,7 +151,6 @@ class Renamer3(object):
                     pokemon['stamina']
                 ]
                 table_data.append(row_data)
-        self.data = table_data
                 # if pokemon.get('best_iv', False) and len(group) > 1:
                 #     row_data = [Colors.OKGREEN + str(cell) + Colors.ENDC for cell in row_data]
         table = AsciiTable(table_data)
@@ -244,7 +163,6 @@ class Renamer3(object):
         print table.table
 
     def rename_pokemon(self):
-        print 'rename >>\n'
         """Renames Pokemon according to configuration"""
         already_renamed = 0
         renamed = 0
@@ -259,7 +177,7 @@ class Renamer3(object):
             num = pokemon['num']
             pokemon_name = self.pokemon_list[str(num)]
 
-            name = self.format
+            name = self.config.format
             name = name.replace("%id", str(num))
             name = name.replace("%ivsum", str(individual_value))
             name = name.replace("%atk", str(pokemon['attack']))
@@ -272,8 +190,8 @@ class Renamer3(object):
 
             if (pokemon['nickname'] == "NONE" \
                 or pokemon['nickname'] == pokemon_name \
-                or (pokemon['nickname'] != name and self.overwrite)) \
-                and iv_percent >= self.iv:
+                or (pokemon['nickname'] != name and self.config.overwrite)) \
+                and iv_percent >= self.config.iv:
 
                 self.api.nickname_pokemon(pokemon_id=pokemon['id'], nickname=name)
                 response = self.api.call()
@@ -285,7 +203,7 @@ class Renamer3(object):
                 else:
                     print "Something went wrong with renaming " + pokemon_name.replace(u'\N{MALE SIGN}', '(M)').replace(u'\N{FEMALE SIGN}', '(F)') + " (CP " + str(pokemon['cp'])  + ") to " + name + ". Error code: " + str(result)
 
-                random_delay = randint(self.min_delay, self.max_delay)
+                random_delay = randint(self.config.min_delay, self.config.max_delay)
                 time.sleep(random_delay)
 
                 renamed += 1
@@ -315,9 +233,12 @@ class Renamer3(object):
                 else:
                     print "Something went wrong with resetting " + pokemon['nickname'] + " to " + name_original + ". Error code: " + str(result)
 
-                random_delay = randint(self.min_delay, self.max_delay)
+                random_delay = randint(self.config.min_delay, self.config.max_delay)
                 time.sleep(random_delay)
 
                 cleared += 1
 
         print "Cleared " + str(cleared) + " names"
+
+if __name__ == '__main__':
+    Renamer().start()

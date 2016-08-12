@@ -1,0 +1,93 @@
+Start renamer
+Namespace(auth_service='google', clear=False, format='%ivsum, %atk/%def/%sta', iv=0, list_only=True, locale='en', max_delay=20, min_delay=10, overwrite=True, password='2XLIILRI', username='wesely.ong@gmail.com')
+Signed in
+Getting Pokemon list
++------------+-----+------+-----+-----+-----+
+| Pokemon    |  CP | IV % | ATK | DEF | STA |
++------------+-----+------+-----+-----+-----+
+| Bulbasaur  | 154 |  53% |   0 |   9 |  15 |
+| Bulbasaur  |  95 |  44% |   0 |  15 |   5 |
+| Bulbasaur  | 232 |  38% |   0 |   4 |  13 |
+| Ivysaur    | 148 |  38% |   0 |  12 |   5 |
+| Charmander |  78 |   7% |   0 |   0 |   3 |
+| Squirtle   |  63 |  47% |   0 |  13 |   8 |
+| Caterpie   |  51 |  11% |   1 |   1 |   3 |
+| Weedle     |  92 |  53% |   3 |   6 |  15 |
+| Weedle     |  78 |  42% |   2 |   3 |  14 |
+| Weedle     |  77 |  36% |   2 |  11 |   3 |
+| Pidgey     |  97 |  58% |   6 |  10 |  10 |
+| Pidgey     | 124 |  31% |   4 |   2 |   8 |
+| Pidgey     |  71 |  20% |   3 |   2 |   4 |
+| Pidgeotto  | 212 |  51% |   5 |   4 |  14 |
+| Pidgeotto  | 145 |  47% |   5 |   4 |  12 |
+| Rattata    | 131 |  62% |  10 |   9 |   9 |
+| Rattata    | 113 |  62% |   4 |  14 |  10 |
+| Rattata    |  84 |  56% |  10 |   3 |  12 |
+| Rattata    | 125 |  51% |   8 |  11 |   4 |
+| Rattata    |  81 |  47% |   7 |   2 |  12 |
+| Spearow    |  10 |  67% |   9 |  13 |   8 |
+| Spearow    |  26 |  44% |  13 |   1 |   6 |
+| Spearow    |  92 |  38% |   1 |   3 |  13 |
+| Ekans      |  51 |  42% |   5 |  13 |   1 |
+| Ekans      | 150 |  22% |   5 |   1 |   4 |
+| Nidoran(F) |  31 |  24% |   5 |   0 |   6 |
+| Nidorina   |  54 |  36% |   5 |   7 |   4 |
+| Nidoran(M) | 188 |  56% |   5 |  13 |   7 |
+| Nidoran(M) | 140 |  44% |   5 |   2 |  13 |
+| Nidoran(M) | 117 |  40% |   5 |   3 |  10 |
+| Nidoran(M) |  71 |  20% |   5 |   4 |   0 |
+| Jigglypuff |  12 |  84% |  10 |  14 |  14 |
+| Zubat      | 115 |  73% |  11 |   9 |  13 |
+| Zubat      | 128 |  51% |  14 |   4 |   5 |
+| Zubat      |  76 |  49% |  14 |   1 |   7 |
+| Zubat      | 101 |  29% |   6 |   5 |   2 |
+| Oddish     |  46 |  62% |   6 |  13 |   9 |
+| Oddish     | 137 |  47% |   6 |   5 |  10 |
+| Gloom      | 429 |  42% |   6 |  13 |   0 |
+| Paras      |  34 |  49% |   6 |  15 |   1 |
+| Venonat    | 179 |  44% |  12 |   0 |   8 |
+| Venonat    |  12 |  38% |   6 |   9 |   2 |
+| Diglett    |  18 |  84% |  10 |  15 |  13 |
+| Psyduck    | 284 |  56% |   6 |   6 |  13 |
+| Psyduck    | 204 |  49% |   3 |  10 |   9 |
+| Growlithe  |  51 |  36% |   6 |   9 |   1 |
+| Poliwag    |  94 |  53% |   7 |   2 |  15 |
+| Poliwag    |  30 |  44% |   7 |  12 |   1 |
+| Poliwag    |  10 |  36% |   7 |   8 |   1 |
+| Bellsprout | 104 |  53% |  13 |   1 |  10 |
+| Bellsprout | 133 |  51% |   7 |   8 |   8 |
+| Bellsprout | 248 |  47% |   8 |   0 |  13 |
+| Tentacool  | 150 |  49% |   4 |  14 |   4 |
+| Geodude    |  10 |  53% |   8 |  15 |   1 |
+| Geodude    | 161 |  31% |   8 |   2 |   4 |
+| Slowpoke   | 209 |  51% |   6 |   2 |  15 |
+| Dodrio     |  74 |  51% |   9 |   3 |  11 |
+| Dodrio     | 225 |  47% |   8 |   4 |   9 |
+| Gastly     |  30 |  53% |   9 |  13 |   2 |
+| Gastly     |  30 |  40% |   9 |   4 |   5 |
+| Haunter    |  57 |  71% |   9 |  12 |  11 |
+| Krabby     |  99 |  73% |  10 |  10 |  13 |
+| Krabby     |  94 |  62% |  10 |  13 |   5 |
+| Krabby     | 180 |  53% |  10 |   3 |  11 |
+| Exeggcute  |  76 |  69% |  10 |  11 |  10 |
+| Rhyhorn    | 151 |  76% |  11 |  15 |   8 |
+| Tangela    | 376 |  78% |  11 |  12 |  12 |
+| Tangela    |  23 |  71% |  11 |   9 |  12 |
+| Horsea     |  55 |  80% |  12 |  14 |  10 |
+| Horsea     | 139 |  64% |  12 |  12 |   5 |
+| Horsea     |  96 |  64% |  11 |  13 |   5 |
+| Goldeen    |  69 |  91% |  12 |  14 |  15 |
+| Staryu     | 170 |  76% |  13 |  13 |   8 |
+| Staryu     | 143 |  64% |  14 |   4 |  11 |
+| Staryu     |  87 |  49% |  13 |   1 |   8 |
+| Scyther    |  89 |  80% |  14 |   9 |  13 |
+| Scyther    | 227 |  36% |  14 |   1 |   1 |
+| Pinsir     | 526 |  80% |  14 |  11 |  11 |
+| Pinsir     |  28 |  69% |  15 |  13 |   3 |
+| Pinsir     |  28 |  56% |  15 |   8 |   2 |
+| Pinsir     |  87 |  47% |  15 |   1 |   5 |
+| Magikarp   |  54 |  69% |  10 |  10 |  11 |
+| Lapras     | 211 |  67% |  10 |  10 |  10 |
+| Eevee      | 262 |  71% |  15 |   2 |  15 |
+| Omanyte    |  46 |  62% |  15 |   1 |  12 |
++------------+-----+------+-----+-----+-----+

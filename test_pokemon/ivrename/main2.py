@@ -1,72 +1,19 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from django.shortcuts import render
 import json
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from subprocess import call
-
 import time
 import argparse
 from itertools import groupby
 from pgoapi import PGoApi
 from random import randint
 from terminaltables import AsciiTable
-import os.path
-BASE = os.path.dirname(os.path.abspath(__file__))
-
-
-def jsonResponse(dict):
-    """ return json response """
-    return HttpResponse(json.dumps(dict), content_type='application/json; charset="utf-8"')
-
-@csrf_exempt
-@require_POST
-def get_iv(request):
-    global a, u, p , lo, clear, fast
-    format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False), fast=還沒做好:快速重新命名(預設False)'
-    if request.POST.get('a'):
-        a = request.POST.get('a')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('u'):
-        u = request.POST.get('u')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('p'):
-        p = request.POST.get('p')
-    else:
-        return jsonResponse({'msg':format_msg,  'success':False})
-
-    if request.POST.get('list_only'):
-        lo = request.POST.get('list_only')
-    else:
-        lo = True
-
-    if request.POST.get('clear'):
-        clear = request.POST.get('clear')
-    else:
-        clear = False
-
-
-    if request.POST.get('fast'):
-        fast = request.POST.get('fast')
-    else:
-        fast = False
-    #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
-    renamer = Renamer3()
-    table_data = renamer.start()
-    return jsonResponse({'usage':format_msg, 'table_data':table_data,  'success':True})
 
 class Colors:
     OKGREEN = '\033[92m'
     ENDC = '\033[0m'
 
-class Renamer3(object):
+class Renamer(object):
     """Main renamer class object"""
 
     def __init__(self):
@@ -77,12 +24,12 @@ class Renamer3(object):
 
     def init_config(self):
 
-        self.auth_service = a
-        self.username = u
-        self.password = p
-        self.clear = clear
-        self.list_only = lo
-        self.format = "%percent% %name"
+        self.auth_service = 'google'
+        self.username = 'wesely.ong@gmail.com'
+        self.password = '2XLIILRI'
+        self.clear = False
+        self.list_only = True
+        self.format = "%ivsum, %atk/%def/%sta"
         self.overwrite = None
         self.min_delay = 10
         self.max_delay = 20
@@ -113,27 +60,25 @@ class Renamer3(object):
         print "Start renamer"
 
         self.init_config()
-        json_data = open(os.path.join(BASE, 'pokemon.tw.json'))
-        print json_data  
-        self.pokemon_list = json.load(json_data)
-        #except IOError:
-        #print "~the selected language is currently not supported"
-        #exit(0)
+
+        try:
+            self.pokemon_list = json.load(open('locales/pokemon.' + self.locale + '.json'))
+        except IOError:
+            print "The selected language is currently not supported"
+            exit(0)
 
         self.setup_api()
         self.get_pokemon()
-        data = self.print_pokemon()
-        print 'lo:'+lo+',  clear:'+clear
-	if lo=='true' or lo=='True':
-            print 'to pass, do nothing'
+        self.print_pokemon()
+
+        if self.list_only:
             pass
-        elif clear=='true' or clear=='True':
-            print 'to clear'
+        elif self.clear:
             self.clear_pokemon()
         else:
-            print 'to rename'
             self.rename_pokemon()
-        return self.data
+        return data
+
 
     def setup_api(self):
         """Prepare and sign in to API"""
@@ -244,7 +189,6 @@ class Renamer3(object):
         print table.table
 
     def rename_pokemon(self):
-        print 'rename >>\n'
         """Renames Pokemon according to configuration"""
         already_renamed = 0
         renamed = 0
@@ -321,3 +265,7 @@ class Renamer3(object):
                 cleared += 1
 
         print "Cleared " + str(cleared) + " names"
+
+if __name__ == '__main__':
+    Renamer().start()
+
