@@ -25,8 +25,8 @@ def jsonResponse(dict):
 @csrf_exempt
 @require_POST
 def get_iv(request):
-    global a, u, p , lo, clear
-    format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False)'
+    # global a, u, p , lo, clear, fast
+    format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False), fast=還沒做好:快速重新命名(預設False)'
     if request.POST.get('a'):
         a = request.POST.get('a')
     else:
@@ -51,10 +51,16 @@ def get_iv(request):
         clear = request.POST.get('clear')
     else:
         clear = False
+
+
+    if request.POST.get('fast'):
+        fast = request.POST.get('fast')
+    else:
+        fast = False
     #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
     renamer = Renamer3()
-    table_data = renamer.start()
-    return jsonResponse({'table_data':table_data,  'success':True})
+    table_data = renamer.start(a,u,p,lo,clear,fast)
+    return jsonResponse({msg:'format_msg', 'table_data':table_data,  'success':True})
 
 class Colors:
     OKGREEN = '\033[92m'
@@ -69,14 +75,14 @@ class Renamer3(object):
         self.pokemon_list = None
 
 
-    def init_config(self):
+    def init_config(a,u,p,lo,clear,fast):
 
         self.auth_service = a
         self.username = u
         self.password = p
         self.clear = clear
         self.list_only = lo
-        self.format = "%percent%-%name"
+        self.format = "%percent% %name"
         self.overwrite = None
         self.min_delay = 10
         self.max_delay = 20
@@ -102,11 +108,11 @@ class Renamer3(object):
         #self.skip_favorite = True
         #self.only_favorite = False
 
-    def start(self):
+    def start(a,u,p,lo,clear,fast):
         """Start renamer"""
         print "Start renamer"
 
-        self.init_config()
+        self.init_config(a,u,p,lo,clear,fast)
         json_data = open(os.path.join(BASE, 'pokemon.tw.json'))
         print json_data  
         self.pokemon_list = json.load(json_data)
