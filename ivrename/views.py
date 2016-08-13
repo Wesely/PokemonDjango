@@ -26,20 +26,24 @@ def jsonResponse(dict):
 @require_POST
 def get_iv(request):
     global a, u, p , lo, clear, fast
+    header = u'fast的設定其實還沒有用...'
     format_msg = u'必要參數: a=google/ptc, u=email, p=password; \n 非必要: list_only=False會重新命名(預設True), clear=True會命名成原本中文名稱(預設False), fast=還沒做好:快速重新命名(預設False)'
     if request.POST.get('a'):
         a = request.POST.get('a')
     else:
+        print u'no param:a'
         return jsonResponse({'msg':format_msg,  'success':False})
 
     if request.POST.get('u'):
         u = request.POST.get('u')
     else:
+        print u'no param:u'
         return jsonResponse({'msg':format_msg,  'success':False})
 
     if request.POST.get('p'):
         p = request.POST.get('p')
     else:
+        print u'no param:u'
         return jsonResponse({'msg':format_msg,  'success':False})
 
     if request.POST.get('list_only'):
@@ -60,7 +64,7 @@ def get_iv(request):
     #table_data = call(['python', 'main2.py', '-a', a, '-u', u, '-p', p, '-lo'])
     renamer = Renamer3()
     table_data = renamer.start()
-    return jsonResponse({'usage':format_msg, 'table_data':table_data,  'success':True})
+    return jsonResponse({'usage':format_msg, 'header': header, 'table_data':table_data,  'success':True})
 
 class Colors:
     OKGREEN = '\033[92m'
@@ -124,7 +128,7 @@ class Renamer3(object):
         self.get_pokemon()
         data = self.print_pokemon()
         print 'lo:'+lo+',  clear:'+clear
-    if lo=='true' or lo=='True':
+        if lo=='true' or lo=='True':
             print 'to pass, do nothing'
             pass
         elif clear=='true' or clear=='True':
