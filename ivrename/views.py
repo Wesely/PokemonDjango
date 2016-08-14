@@ -127,8 +127,8 @@ class Renamer3(object):
         self.setup_api()
         self.get_pokemon()
         data = self.print_pokemon()
-        print 'lo:'+lo+',  clear:'+clear
-        if lo=='true' or lo=='True':
+        print 'lo:'+str(lo)+',  clear:'+str(clear)
+        if lo=='true' or lo=='True' or lo:
             print 'to pass, do nothing'
             pass
         elif clear=='true' or clear=='True':
