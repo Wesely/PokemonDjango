@@ -37,7 +37,7 @@ var showPokemons = function(ele){
 	var pageContent = document.getElementById('page-content');
 	var table = document.createElement("table");
 	table.id = "pokemon-table";
-	table.setAttribute("class", "table table-striped table-bordered");
+	table.setAttribute("class", "table table-striped table-bordered dataTable no-footer");
 	var thead = document.createElement("thead");
 	var tr = document.createElement("tr");
 	// table head
@@ -65,6 +65,9 @@ var showPokemons = function(ele){
 	table.appendChild(tbody);
 	clearContent();
 	pageContent.appendChild(table);
+	$("#pokemon-table").dataTable({
+        "order": [ 2, "desc" ]
+    });
 }
 
 var clearContent = function(){
