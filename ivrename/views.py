@@ -128,7 +128,7 @@ class Renamer3(object):
         self.get_pokemon()
         data = self.print_pokemon()
         print 'lo:'+str(lo)+',  clear:'+str(clear)
-        if (lo not 'false') and (lo not 'False'):
+        if (lo != 'false') and (lo != 'False'):
             print 'to pass, do nothing'
             pass
         elif clear=='true' or clear=='True':
